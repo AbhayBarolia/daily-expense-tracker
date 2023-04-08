@@ -1,8 +1,4 @@
-async function 
-
-
-
-userDetails(e){
+async function userDetails(e){
     e.preventDefault();
     let email = document.getElementById("email").value;
     let username = document.getElementById("username").value;
@@ -27,5 +23,5 @@ userDetails(e){
 
 async function createUser(user){
     const res= await axios.post("http://localhost:3000/signup",user);   
-    console.log(res.data.message);
+    alert(res.data.message);
 }
