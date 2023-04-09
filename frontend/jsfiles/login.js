@@ -17,6 +17,8 @@ async function userDetails(e){
 
 
 async function loginUser(user){
-    const res= await axios.post("http://localhost:3000/login",user);   
-    alert(res.data.message);
+    const res= await axios.post("http://localhost:3000/user/login",user);   
+    alert(res.data.message);    
+    if(res.status==200){
+    window.location.href = "/frontend/views/expense.html";}
 }

@@ -22,6 +22,8 @@ async function userDetails(e){
 
 
 async function createUser(user){
-    const res= await axios.post("http://localhost:3000/signup",user);   
+    console.log('reached');
+    const res= await axios.post("http://localhost:3000/user/signup",user);   
     alert(res.data.message);
+    window.location.replace("/frontend/views/login.html");
 }

@@ -1,0 +1,122 @@
+.main-header-nav {
+    width: 100%;
+    height: 3.7rem;
+    background-color: white;
+    padding: 0 0;
+    display: block;
+    align-items: center;
+  }
+
+  #nav-head {
+	width: 100%;
+	float: left;
+	margin: 0 0 0 0;
+	padding: 0;
+	background-color: #f2f2f2;
+	border-bottom: 1px solid #ccc;  }
+#nav-head ul {
+	list-style: none;
+	width: 2000px;
+	margin-bottom: 0 ;
+	padding: 0; }
+#nav-head li {
+	float: left; }
+#nav-head li a {
+	display: block;
+	padding: 10px 20px;
+	text-decoration: none;
+	font-weight: bold;
+	color: #000000;
+	border-right: 1px solid #ccc; }
+#nav-head li:first-child a {
+	border-left: 1px solid #ccc; }
+#nav-head li a:hover {
+	color: white;
+	background-color:black; }
+body {
+    background-color: black;
+    text-align:center;
+}   
+
+#h1 {
+    background-color: #000000;
+    color: white;
+}
+
+form {
+    font-family: sans-serif;
+     
+        align-self: center;
+        border: 2px solid black;
+        text-align: center;
+      
+        background-color: white;
+    
+        margin: 10px;
+    }
+    hr{
+        border: 3px solid black;
+        border-radius: 2px;
+        margin-right:5px ;
+        margin-left: 5px;
+    }
+    label{
+        
+        font-weight: bold;
+        font-family:sans-serif;
+        color: black;
+        margin-bottom: 10px;
+    }
+    .sub{
+        color: white;
+        align-self: center;
+        align-items: center;
+        text-align: centre;
+        padding: 10px;
+        border-radius: 5px;
+        border: 2px solid white;
+        font-weight: bold;
+        font-family:sans-serif;
+        background-color: black;
+    }
+    
+    .sub:hover {
+        text-decoration: underline;
+        background-color:white;
+        color: black;
+        border: 2px solid black;
+    }
+    ul{     
+        align-self: center;
+        align-items: center;
+        display: block; 
+        text-align: centre;
+        padding: 10px;
+        border-radius: 5px;
+        border: 2px solid black;
+        background-color: grey;
+        margin-left: 80px;
+        margin-right: 80px;
+    }
+    li{
+        padding: 10px;
+        text-align: center;
+    }
+    .btn {
+        color: white;
+        align-self: center;
+        align-items: center;
+        text-align: centre;
+        padding: 10px;
+        border-radius: 5px;
+        border: 2px solid white;
+        font-weight: bold;
+        font-family:sans-serif;
+        background-color: black;
+    }
+    .btn:hover {
+        text-decoration: underline;
+        background-color:white;
+        color: black;
+        border: 2px solid black;
+       }

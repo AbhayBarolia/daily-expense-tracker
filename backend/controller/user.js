@@ -65,7 +65,7 @@ exports.userLogin = async function (req,res,next) {
             }
             else if(resolve)
             {
-                res.status(201).json({ message: 'User logged in' });
+                res.status(200).json({ message: 'User logged in',id:user.dataValues.id});
             }
             else
             {
