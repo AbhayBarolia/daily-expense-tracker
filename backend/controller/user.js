@@ -2,6 +2,10 @@ const express = require('express');
 
 const User = require('../models/user');
 
+const jwt= require('jsonwebtoken');
+
+const secret = "secret_key";
+
 const bcrypt = require('bcrypt');
 const saltRounds=10;
 
@@ -65,7 +69,14 @@ exports.userLogin = async function (req,res,next) {
             }
             else if(resolve)
             {
-                res.status(200).json({ message: 'User logged in',id:user.dataValues.id});
+                const payload = {
+                    userId: user.dataValues.id,
+                  };
+                
+                const token = jwt.sign(payload, secret);
+                 
+
+                res.status(200).json({ message: 'User logged in', token:token});
             }
             else
             {

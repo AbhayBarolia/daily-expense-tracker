@@ -1,10 +1,31 @@
 const express = require('express');
 
 const Expense = require('../models/expense');
+const User = require('../models/user');
+
+const jwt=require('jsonwebtoken');
+const { use } = require('../routes/user');
+const secret = "secret_key";
+
+let userId;
+
+
+exports.getUser= async function(req, res, next) {
+try{
+    const token = req.headers.authorization;
+    const decoded = jwt.verify(token,secret );
+    userId=decoded.userId;
+    const user = await User.findOne({where:{id:userId}});
+    res.status(200).json({userName:user.dataValues.userName});
+}
+catch(err){console.log(err);}
+}
+
 
 exports.getAllExpense= async (req, res, next) =>{
     try{
-        const expense = await Expense.findAll();
+    
+        const expense = await Expense.findAll({where:{userId:userId}});
         res.status(200).json(expense);
     }catch(err){
         res.status(500).json({message: err.message});
@@ -20,7 +41,8 @@ exports.addExpense= async (req, res, next) =>{
             expenseName: expenseName,
             amount: amount,
             category: category,    
-            userId:1
+            userId:userId
+
         });
         if(created){
             return res.status(201).json({ message: 'User created' });
@@ -40,7 +62,8 @@ exports.deleteExpense= async (req, res, next)=>{
     const expenseId = req.params.id;
     const deleted = await Expense.destroy({
         where:{
-            id: expenseId
+            id: expenseId,
+            userId:userId
         }
     });
     if(deleted){

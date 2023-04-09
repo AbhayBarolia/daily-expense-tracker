@@ -1,17 +1,36 @@
 let ll = [];
 let list=document.getElementById("list");
+let userName;
 
 list.addEventListener("click", removeItem);
 
 
 window.addEventListener("DOMContentLoaded", (event) => {  
+  getUser();  
   getData();   
   });
 
 
+async function getUser() {
+    try{
+        const config={headers:{'Content-Type':'application/JSON',Authorization:localStorage.getItem('token')}};
+        const res = await axios.get("http://localhost:3000/expense/getuser",config);
+        if(res!=undefined) {
+            console.log(res.data.userName);
+        userName = res.data.userName;
+        document.getElementById("account").innerHTML = userName;
+        }
+
+}
+    catch(error){
+        console.log(error);
+    }}
+
+
  async function getData(){
     try{
-    const res = await axios.get("http://localhost:3000/expense/getexpense");
+        const config={headers:{'Content-Type':'application/JSON',Authorization:localStorage.getItem('token')}};
+        const res = await axios.get("http://localhost:3000/expense/getexpense",config);
     for(let i =0; i< res.data.length;i++)
     {
         let str =`Expense: ${res.data[i].expenseName}  Amount: ${res.data[i].amount} Category: ${res.data[i].category} `
