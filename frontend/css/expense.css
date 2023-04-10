@@ -38,6 +38,12 @@ body {
     text-align:center;
 }   
 
+.premium{
+    color: white;
+    background-color: #000000;
+    text-align: left;
+}
+
 #p{
     background-color: #000000;
     color: white;

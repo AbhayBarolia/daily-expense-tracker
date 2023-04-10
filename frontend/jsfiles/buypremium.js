@@ -1,5 +1,5 @@
 let userName;
-
+let premium = false;
 
 window.addEventListener("DOMContentLoaded", (event) => {  
     getUser();     
@@ -12,9 +12,13 @@ async function getUser() {
         const config={headers:{'Content-Type':'application/JSON',Authorization:localStorage.getItem('token')}};
         const res = await axios.get("http://localhost:3000/premium/getuser",config);
         if(res!=undefined) {
-            console.log(res.data.userName);
+            console.log(res.data);
         userName = res.data.userName;
+        premium = res.data.premium;
         document.getElementById("account").innerHTML = userName;
+        if(premium) {
+            document.getElementById("premium").innerHTML = "Premium Membership";
+        }
         }
 
 }
@@ -45,6 +49,7 @@ async function commitPayment(e) {
                     payment_id:response.razorpay_payment_id},config);
 
                     alert("You are a premium user now");
+                    window.location.href = "http://127.0.0.1:5500/frontend/views/expense.html";
                 }
             }
             const rzpay= new Razorpay(options);

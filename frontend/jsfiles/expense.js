@@ -23,10 +23,22 @@ async function getUser() {
         premium = res.data.premium;
         document.getElementById("account").innerHTML = userName;
         if(premium===true) {
-            document.getElementById("premium").innerHTML = "Premium Membership";
+            await getPremiumData();
+
+        }
+    }
+}
+    catch(error){
+        console.log(error);
+    }}
+
+async function getPremiumData(){
+    try{
+        document.getElementById("premium").innerHTML = "Premium Membership";
             let list = document.getElementById("nav-header-list");
             let li = document.getElementById('buypremium');
             list.removeChild(li);
+            const config={headers:{'Content-Type':'application/JSON',Authorization:localStorage.getItem('token')}};
             let premiumListData= await axios.get("http://localhost:3000/expense/getpremiumlist",config);
             let premiumList = document.getElementById('premium-list');
             let listMessage= document.getElementById('premium-list-message');
@@ -37,13 +49,11 @@ async function getUser() {
                 showPremiumList(str);
             }
 
-
         }
-    }
+        catch(error){
+            console.log(error);
+        }
 }
-    catch(error){
-        console.log(error);
-    }}
 
 
  async function getData(){

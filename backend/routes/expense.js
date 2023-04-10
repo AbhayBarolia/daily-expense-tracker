@@ -6,6 +6,7 @@ const expense = require('../controller/expense');
 
 routes.get('/getuser',expense.getUser);
 routes.get('/getexpense',expense.getAllExpense);
+routes.get('/getpremiumlist',expense.premiumTotalExpense);
 routes.post('/addexpense',expense.addExpense);
 routes.delete('/delete/:id',expense.deleteExpense);
 

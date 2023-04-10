@@ -10,6 +10,7 @@ const userRoutes= require('./backend/routes/user');
 const expenseRoutes= require('./backend/routes/expense');
 const premiumRoutes= require('./backend/routes/premium');
 
+
 const app= express();
 app.use(cors());
 app.use(bodyParser.json({ extended:false }));
@@ -17,7 +18,7 @@ app.use(bodyParser.json({ extended:false }));
 const User = require('./backend/models/user');
 const Expense = require('./backend/models/expense');
 const Orders = require('./backend/models/orders');
-
+const totalExpense= require('./backend/models/totalExpense');
 
 app.use('/user',userRoutes);
 
@@ -30,6 +31,9 @@ User.hasMany(Expense);
 
 Orders.belongsTo(User, {constraints:true, onDelete: 'cascade'});
 User.hasMany(Orders);
+
+User.hasOne(totalExpense);
+totalExpense.belongsTo(User);
 
 sequelize.sync()
 .then((results)=>{

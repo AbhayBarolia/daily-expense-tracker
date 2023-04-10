@@ -2,11 +2,14 @@ const express = require('express');
 
 const User = require('../models/user');
 
+const totalExpense= require('../models/totalExpense');
+
 const jwt= require('jsonwebtoken');
 
 const secret = "secret_key";
 
 const bcrypt = require('bcrypt');
+const sequelize = require('../util/database');
 const saltRounds=10;
 
 
@@ -15,6 +18,7 @@ exports.getSignupRequest= async (req, res, next) => {
 }
 
 exports.userSignup= async function (req,res,next){
+    const transaction= await sequelize.transaction();
     try{
         const email = req.body.email;
         const userName = req.body.username;
@@ -34,19 +38,39 @@ exports.userSignup= async function (req,res,next){
                     const created= await User.create({ 
                         email: email,
                         userName: userName,
-                        password: hash});
+                        password: hash,
+                        totalExpense:0
+                    },{transaction:transaction});
+
                     if(created){
-                        return res.status(201).json({ message: 'User created' });
+                        const user = await User.findOne({ where: { email:email } });
+                        const totalExpUpdate = await totalExpense.create({
+                            userId: user.dataValues.id,
+                            userName:user.dataValues.userName,
+                            totalExpense: 0
+
+                        },{transaction:transaction});
+
+                        if(totalExpUpdate){
+                            await transaction.commit();
+                            return res.status(201).json({ message: 'User created' });
+                        }
+                        else{
+                            await transaction.rollback();
+                            return res.status(500).json({ message: 'User not created' });
+                        }
                     }
                     else{
-                        return res.status(201).json({ message: 'User not created' });
+                        await transaction.rollback();
+                        return res.status(500).json({ message: 'User not created' });
                     }    
                 }
             });
     
         }
     }catch(err){
-       console.log(err);
+        await transaction.rollback();
+        return res.status(500).json({ message: 'User not created' });
     }
 }
 
@@ -89,6 +113,6 @@ exports.userLogin = async function (req,res,next) {
         }
     }
     catch(err){
-        console.log(err);
+        return res.status(500).json({ message: 'User not loggedin' });
     }
 }

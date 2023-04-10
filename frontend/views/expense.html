@@ -13,7 +13,7 @@
 </head>
 <body>
     <nav class="main-header-nav" id="nav-head">
-        <ul class="main-header-list">
+        <ul class="main-header-list" id="nav-header-list">
             <li class="main-header-link">
                 <a id="account" href="/frontend/views/account.html">Account</a>
             </li>
@@ -23,12 +23,13 @@
             <li class="main-header-link">
                 <a href="/about">About</a>
             </li>
-            <li class="main-header-link">
+            <li class="main-header-link" id="buypremium">
                 <a href="/frontend/views/buypremium.html">Buy Premium</a>
             </li>
         </ul>
     </nav>
     <br><br>
+    <p class="premium" id="premium"></p>
     <hr>
     <form class ="form"> 
         <h1 id="h1">Add new Expense</h1>
@@ -49,8 +50,14 @@
     </form>  
     <hr>
     <br>
+    <h5>Expense List</h5>
     <ul id="list">
     </ul>    
+    <br><br>
+    <h5>Leader Bord</h5>
+    <ul id="premium-list">
+        <p id="premium-list-message">Buy premium to unlock!</p>
+    </ul>   
     <script type="text/javascript" src="../jsfiles/expense.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
 </body>
