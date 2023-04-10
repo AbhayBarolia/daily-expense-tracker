@@ -1,11 +1,14 @@
 let ll = [];
 let list=document.getElementById("list");
+let leaderList = document.getElementById('premium-list');
 let userName;
+let premium;
 
 list.addEventListener("click", removeItem);
 
 
 window.addEventListener("DOMContentLoaded", (event) => {  
+  premium=false;
   getUser();  
   getData();   
   });
@@ -16,11 +19,27 @@ async function getUser() {
         const config={headers:{'Content-Type':'application/JSON',Authorization:localStorage.getItem('token')}};
         const res = await axios.get("http://localhost:3000/expense/getuser",config);
         if(res!=undefined) {
-            console.log(res.data.userName);
         userName = res.data.userName;
+        premium = res.data.premium;
         document.getElementById("account").innerHTML = userName;
-        }
+        if(premium===true) {
+            document.getElementById("premium").innerHTML = "Premium Membership";
+            let list = document.getElementById("nav-header-list");
+            let li = document.getElementById('buypremium');
+            list.removeChild(li);
+            let premiumListData= await axios.get("http://localhost:3000/expense/getpremiumlist",config);
+            let premiumList = document.getElementById('premium-list');
+            let listMessage= document.getElementById('premium-list-message');
+            premiumList.removeChild(listMessage);
+            for(let i =0; i< premiumListData.data.length;i++)
+            {
+                let str= `Name: ${premiumListData.data[i].userName} Total Expense: ${premiumListData.data[i].totalExpense}`;
+                showPremiumList(str);
+            }
 
+
+        }
+    }
 }
     catch(error){
         console.log(error);
@@ -122,3 +141,10 @@ function showData(str,id)
         list.appendChild(li);
         }   
     }
+
+    function showPremiumList(str)
+    {
+        let li=document.createElement("li");      
+        li.appendChild(document.createTextNode(str));
+        leaderList.appendChild(li);
+    }    
