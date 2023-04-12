@@ -1,5 +1,9 @@
 const express = require('express');
 
+const sib = require('sib-api-v3-sdk');
+
+require('dotenv').config();
+
 const User = require('../models/user');
 
 const totalExpense= require('../models/totalExpense');
@@ -116,3 +120,74 @@ exports.userLogin = async function (req,res,next) {
         return res.status(500).json({ message: 'User not loggedin' });
     }
 }
+
+
+
+
+exports.resetPasswordRequest = async function (req,res,next){
+ try{
+    const email = req.body.email;
+    const client = sib.ApiClient.instance;
+    const apiKey = client.authentications['api-key'];
+    apiKey.apiKey = process.env.RESETPASSWORD_API_KEY;
+    
+    const transEmailApi = new sib.TransactionalEmailsApi();
+
+    const sender={email:'abhay28barolia@gmail.com'};
+
+    const receivers=[{email:'abhay28barolia@gmail.com'},];
+
+    const emailSent=await transEmailApi.sendTransacEmail({
+        sender,
+        to:receivers,
+        subject:'Reset Password',
+        textContent:'Please click on the link below to reset your password',
+        htmlContent:`<a id=${email} href="http://127.0.0.1:5500//frontend/views/resetpassword.html">Reset Password</a>`
+    });
+    if(emailSent){
+        res.status(200).json({message:'Reset password mail sent, please click on the link in mail to reset your password'});
+    }
+    else{
+        res.status(500).json({message:'Something went wrong'});
+    }
+    
+    
+ }
+ catch(err){
+    return res.status(500).json({ message: 'Please try again' });
+ }   
+}
+
+
+
+exports.newPasswordRequest= async function (req,res,next){
+    try{
+        const email = req.body.email;
+        const password= req.body.password;
+        const user = await User.findOne({ where: { email:email } });
+        bcrypt.hash(password, saltRounds, async (err,hash) => {
+            if(err) 
+            { return res.status(500).json({ message: 'Please try again' }); }
+
+            else{
+                const updated= await user.update({ password:hash });
+                await user.save();
+                if(updated)
+                {
+                    res.status(200).json({ message: 'Password updated, please login' });
+                }
+                else
+                {
+                    res.status(500).json({ message: 'Something went wrong' });
+                }
+                   
+            }
+          }
+
+    )
+}
+    catch(err){
+        return res.status(500).json({ message: 'Please try again' });
+    }
+}
+
