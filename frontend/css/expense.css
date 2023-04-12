@@ -45,6 +45,7 @@ body {
 }
 
 #p{
+    width: 100%;
     background-color: #000000;
     color: white;
 }
@@ -113,18 +114,43 @@ form {
         text-align: center;
     }
     .btn {
+        position: absolute;
+        right: 0px;
         color: white;
         align-self: center;
         align-items: center;
         text-align: centre;
-        padding: 10px;
-        border-radius: 5px;
+        padding: 5px;
+        border-radius: 2px;
         border: 2px solid white;
         font-weight: bold;
         font-family:sans-serif;
         background-color: black;
     }
     .btn:hover {
+        text-decoration: underline;
+        background-color:white;
+        color: black;
+        border: 2px solid black;
+       }
+
+
+       .delbtn {
+        position: absolute;
+        right: 100px;
+        color: white;
+        align-self: center;
+        align-items: center;
+        text-align: centre;
+        padding: 5px;
+        border-radius: 5px;
+        border: 2px solid white;
+        margin-left: 5px;
+        font-weight: bold;
+        font-family:sans-serif;
+        background-color: black;
+    }
+    .delbtn:hover {
         text-decoration: underline;
         background-color:white;
         color: black;
