@@ -1,6 +1,7 @@
 let ll = [];
 let list=document.getElementById("list");
 let leaderList = document.getElementById('premium-list');
+
 let userName;
 let premium;
 
@@ -12,6 +13,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
   getUser();  
   getData();   
   });
+
 
 
 async function getUser() {
@@ -34,10 +36,22 @@ async function getUser() {
 
 async function getPremiumData(){
     try{
-        document.getElementById("premium").innerHTML = "Premium Membership";
+
+            let premiumMessage=document.getElementById("premium")
+            premiumMessage.innerHTML = "Premium Membership";
             let list = document.getElementById("nav-header-list");
             let li = document.getElementById('buypremium');
             list.removeChild(li);
+            let report = document.createElement("li");
+            report.setAttribute("class","btn");
+            report.setAttribute("type","button");
+            report.setAttribute("id","report");
+            report.appendChild(document.createTextNode("Download Expense Report"));
+            premiumMessage.appendChild(report);
+
+            var getReport= document.getElementById('report');
+            getReport.addEventListener("click",generateReport);
+
             const config={headers:{'Content-Type':'application/JSON',Authorization:localStorage.getItem('token')}};
             let premiumListData= await axios.get("http://localhost:3000/expense/getpremiumlist",config);
             let premiumList = document.getElementById('premium-list');
@@ -55,6 +69,8 @@ async function getPremiumData(){
         }
 }
 
+
+    
 
  async function getData(){
     try{
@@ -133,6 +149,27 @@ catch(err){
 
 
 
+
+async function generateReport(){
+    try{
+        console.log("Generating Report");
+    const config={headers:{'Content-Type':'application/JSON',Authorization:localStorage.getItem('token')}};
+    let reportGen= await axios.get("http://localhost:3000/expense/report",config);
+    if(reportGen.status==200)
+    {
+     alert("Report is downloading");   
+    }
+    else{
+        alert("Something went wrong, please try again");
+    }
+}
+catch(err){
+    console.log(err);
+}
+}
+
+
+
 function showData(str,id)
     {
         if(ll.indexOf(id)==-1)
@@ -143,7 +180,7 @@ function showData(str,id)
         li.appendChild(document.createTextNode(str));
 
         let btn1=document.createElement("Delete");
-        btn1.className="btn";
+        btn1.className="delbtn";
         btn1.setAttribute("type","button");
         btn1.appendChild(document.createTextNode("Delete")); 
         li.appendChild(btn1);

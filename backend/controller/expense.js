@@ -129,10 +129,22 @@ exports.premiumTotalExpense = async (req, res, next)=>{
         res.status(200).json(totalExpenseList);
     }
     else{
-        res.status(201).json({ message: 'No Expense' });
+        res.status(500).json({ message: 'No Expense' });
     }
  }
  catch(err){
-     res.status(400).json({message: err.message});
+     res.status(500).json({message: err.message});
  }   
+}
+
+
+exports.generateReport= async (req, res, next)=>{
+    try{
+       
+       return res.status(200).json({message: 'Report'});
+    }
+
+    catch(err){
+        return res.status(500).json({message: err.message});
+    }
 }
