@@ -2,9 +2,13 @@ const express = require('express');
 
 const sib = require('sib-api-v3-sdk');
 
+const {v4 : uuidv4} = require('uuid')
+
 require('dotenv').config();
 
 const User = require('../models/user');
+
+const pcr= require('../models/passwordChangeRequest');
 
 const totalExpense= require('../models/totalExpense');
 
@@ -125,8 +129,26 @@ exports.userLogin = async function (req,res,next) {
 
 
 exports.resetPasswordRequest = async function (req,res,next){
- try{
+    const transaction= await sequelize.transaction();
+    try{
     const email = req.body.email;
+    const uuid = uuidv4();
+    const user = await User.findOne({ where: { email:email } });
+    const userId = user.dataValues.id;
+    const requestAdded= await pcr.create(
+        {
+            uuid: uuid,
+            userId: userId,
+            isActive:true
+        },{transaction:transaction});
+     if(requestAdded){
+        await transaction.commit();
+     }   
+     else{
+        await transaction.rollback();
+        return res.status(500).json({ message: 'Something went wrong' });
+     }
+
     const client = sib.ApiClient.instance;
     const apiKey = client.authentications['api-key'];
     apiKey.apiKey = process.env.RESETPASSWORD_API_KEY;
@@ -142,7 +164,7 @@ exports.resetPasswordRequest = async function (req,res,next){
         to:receivers,
         subject:'Reset Password',
         textContent:'Please click on the link below to reset your password',
-        htmlContent:`<a id=${email} href="http://127.0.0.1:5500//frontend/views/resetpassword.html">Reset Password</a>`
+        htmlContent:`<a id=${email} href=http://localhost:3000/user/resetpassword/${uuid}>Reset Password</a>`
     });
     if(emailSent){
         res.status(200).json({message:'Reset password mail sent, please click on the link in mail to reset your password'});
@@ -160,24 +182,57 @@ exports.resetPasswordRequest = async function (req,res,next){
 
 
 
+exports.getNewPasswordRequest= async function (req,res,next){
+    try{
+        const uuid = req.params.uuid;
+        const request = await pcr.findByPk(uuid);
+        console.log(request);
+        if(request && request.dataValues.isActive==true){
+            return res.status(200).redirect('http://127.0.0.1:5500//frontend/views/resetpassword.html');
+        }
+        else{
+            return res.status(500).json({message:'Request expired, please try again'});
+        }
+    }
+    catch(err){
+        return res.status(500).json({ message: 'Please try again' });
+    }
+}
+
+
 exports.newPasswordRequest= async function (req,res,next){
+    const transaction = await sequelize.transaction();
+
     try{
         const email = req.body.email;
         const password= req.body.password;
         const user = await User.findOne({ where: { email:email } });
+        const userId = user.dataValues.id;
+        const changeRequest = await pcr.findOne({where:{userId:userId,isActive:true}});
+        if(changeRequest){
+          
         bcrypt.hash(password, saltRounds, async (err,hash) => {
             if(err) 
             { return res.status(500).json({ message: 'Please try again' }); }
 
             else{
-                const updated= await user.update({ password:hash });
+                const updated= await user.update({ password:hash },{transaction:transaction});
                 await user.save();
                 if(updated)
                 {
+                    const updateChangeRequest= await changeRequest.update({isActive:false},{transaction:transaction});
+                    if(updateChangeRequest){
+                        await transaction.commit();
                     res.status(200).json({ message: 'Password updated, please login' });
+                    }
+                    else{
+                        await transaction.rollback();
+                        return res.status(500).json({ message: 'Something went wrong' });
+                    }
                 }
                 else
-                {
+                {   
+                    await transaction.rollback();
                     res.status(500).json({ message: 'Something went wrong' });
                 }
                    
@@ -185,8 +240,15 @@ exports.newPasswordRequest= async function (req,res,next){
           }
 
     )
+        }
+        else
+                {   
+                    await transaction.rollback();
+                    res.status(500).json({ message: 'Something went wrong' });
+                }
 }
-    catch(err){
+    catch(err){ 
+        await transaction.rollback();
         return res.status(500).json({ message: 'Please try again' });
     }
 }

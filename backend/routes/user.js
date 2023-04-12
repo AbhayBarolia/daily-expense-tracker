@@ -10,6 +10,7 @@ routes.post('/signup',user.userSignup);
 routes.get('/login',user.getLoginRequest);
 routes.post('/login',user.userLogin);
 
+routes.get('/resetpassword/:uuid',user.getNewPasswordRequest);
 routes.post('/resetpassword',user.resetPasswordRequest);
 
 routes.post('/newpassword',user.newPasswordRequest);
