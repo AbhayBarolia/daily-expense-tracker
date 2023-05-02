@@ -1,5 +1,5 @@
 const express = require('express');
-//const Razorpay= require('razorpay');
+const Razorpay= require('razorpay');
 const Expense = require('../models/expense');
 
 const Orders = require('../models/orders');
@@ -38,13 +38,13 @@ exports.processPayment= async function(req, res, next) {
 });
 
 
-    await rzp.orders.create({amount, currency: 'INR'},async (err, order) =>{
+    await rzp.orders.create({amount, currency: 'INR'},async (err, orderTrans) =>{
     if(err){
         return res.status(500).json({message: err});
     }
     else
     {
-        const order =  await User.createOrder({orderId:order.id, status:'PENDING', paymentId:"WAITING"},{transaction: transaction});
+        const order =  await User.createOrder({orderId:orderTrans.id, status:'PENDING', paymentId:"WAITING"},{transaction: transaction});
        if(order) {
         await transaction.commit();
         return res.status(201).json({order, key_id:rzp.key_id});

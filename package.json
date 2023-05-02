@@ -4,6 +4,7 @@
     "start": "nodemon app.js"
   },
   "dependencies": {
+    "aws-sdk": "^2.1370.0",
     "bcrypt": "^5.1.0",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
@@ -12,7 +13,7 @@
     "jsonwebtoken": "^9.0.0",
     "mysql2": "^3.2.0",
     "nodemon": "^2.0.22",
-    "razorpay": "^0.0.0",
+    "razorpay": "^2.8.6",
     "sequelize": "^6.30.0",
     "sib-api-v3-sdk": "^8.5.0",
     "uuid": "^9.0.0"

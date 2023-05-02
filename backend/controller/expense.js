@@ -1,5 +1,7 @@
 const express = require('express');
 
+const AWS= require('aws-sdk');
+
 const Expense = require('../models/expense');
 const User = require('../models/user');
 const Orders= require('../models/orders');
@@ -137,11 +139,45 @@ exports.premiumTotalExpense = async (req, res, next)=>{
  }   
 }
 
+async function uploadToS3(data, filename){
+    
+
+
+    let s3Bucket = await new AWS.S3({
+        accessKeyId: IAM_USER_KEY,
+        secretAccessKey: IAM_USER_SECRET
+        
+    });
+
+   
+        var params = {
+            Bucket: BUCKET_NAME,
+            Key: filename,
+            Body:data,
+            ACL:'public-read'
+        }
+        return new Promise((resolve, reject) => {
+            s3Bucket.upload(params,async (err, s3response)=>{
+                if (err) {
+                 reject(err);
+                }        
+                else{
+                 console.log(s3response,"success");
+                 resolve(s3response.Location);
+                }
+             });
+        });
+       
+}
+
 
 exports.generateReport= async (req, res, next)=>{
-    try{
-       
-       return res.status(200).json({message: 'Report'});
+    try{ 
+       const expenses = await Expense.findAll({where:{userId:userId}});
+       const stringExpenses = JSON.stringify(expenses);
+       const filename= `Report${userId}/${new Date()}.txt`;
+       const fileURL = await uploadToS3(stringExpenses, filename);
+       return res.status(200).json({fileURL, success:true});
     }
 
     catch(err){

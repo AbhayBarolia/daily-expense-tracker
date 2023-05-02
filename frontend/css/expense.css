@@ -108,7 +108,15 @@ form {
         background-color: grey;
         margin-left: 80px;
         margin-right: 80px;
+        
     }
+
+    .scroll{
+        overflow:scroll;
+        overflow-x:hidden;
+        max-height: 300px;
+    }
+
     li{
         padding: 10px;
         text-align: center;
@@ -136,8 +144,7 @@ form {
 
 
        .delbtn {
-        position: absolute;
-        right: 100px;
+        right: 200px;
         color: white;
         align-self: center;
         align-items: center;

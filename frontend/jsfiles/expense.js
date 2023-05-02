@@ -120,7 +120,7 @@ async function sendData(obj){
 
 async function removeItem(e)
     { try{
-        if(e.target.classList.contains("btn"))
+        if(e.target.classList.contains("delbtn"))
     {
         if(confirm("Do you want to delete this expense"))
         {
@@ -157,7 +157,11 @@ async function generateReport(){
     let reportGen= await axios.get("http://localhost:3000/expense/report",config);
     if(reportGen.status==200)
     {
-     alert("Report is downloading");   
+     alert("Report is downloading"); 
+     var a = document.createElement('a');
+     a.href= reportGen.data.fileURL;
+     a.download= 'myexpense.csv';
+     a.click();
     }
     else{
         alert("Something went wrong, please try again");
@@ -165,6 +169,7 @@ async function generateReport(){
 }
 catch(err){
     console.log(err);
+    alert("Something went wrong, please try again");
 }
 }
 
@@ -178,14 +183,17 @@ function showData(str,id)
         let li=document.createElement("li");  
         li.setAttribute("id",id);    
         li.appendChild(document.createTextNode(str));
+        
+        let hr= document.createElement("hr"); 
 
         let btn1=document.createElement("Delete");
         btn1.className="delbtn";
         btn1.setAttribute("type","button");
         btn1.appendChild(document.createTextNode("Delete")); 
         li.appendChild(btn1);
-
+        li.appendChild(hr);
         list.appendChild(li);
+        
         }   
     }
 
@@ -193,5 +201,9 @@ function showData(str,id)
     {
         let li=document.createElement("li");      
         li.appendChild(document.createTextNode(str));
+
+        let hr= document.createElement("hr"); 
+
         leaderList.appendChild(li);
+        leaderList.appendChild(hr);
     }    
