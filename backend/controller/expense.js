@@ -6,6 +6,7 @@ const Expense = require('../models/expense');
 const User = require('../models/user');
 const Orders= require('../models/orders');
 const totalExpense= require('../models/totalExpense');
+const fileRecords = require('../models/fileRecord');
 
 const jwt=require('jsonwebtoken');
 const sequelize = require('../util/database');
@@ -34,9 +35,24 @@ catch(err){console.log(err);}
 
 exports.getAllExpense= async (req, res, next) =>{
     try{
-    
-        const expense = await Expense.findAll({where:{userId:userId}});
-        res.status(200).json(expense);
+        const token = req.headers.authorization;
+        const decoded = await jwt.verify(token,secret);
+        userId=decoded.userId;
+        let totalPages= await Expense.findAndCountAll({where: {userId:userId}});
+        let page =Number(req.params.page);
+        let pageSize=Number(req.params.offset);
+        let pages=Math.ceil(totalPages.count/2);
+        let offset=pageSize * (page - 1);
+        
+
+        const expense = await Expense.findAll(
+              {
+                where: {userId:userId},
+                limit:pageSize,
+                offset:offset
+              }      
+            );
+        res.status(200).json({expense, totalPages:pages});
     }catch(err){
         res.status(500).json({message: err.message});
     }
@@ -172,15 +188,44 @@ async function uploadToS3(data, filename){
 
 
 exports.generateReport= async (req, res, next)=>{
+    const transaction = await sequelize.transaction();
     try{ 
        const expenses = await Expense.findAll({where:{userId:userId}});
        const stringExpenses = JSON.stringify(expenses);
        const filename= `Report${userId}/${new Date()}.txt`;
        const fileURL = await uploadToS3(stringExpenses, filename);
+       const fileRecord= await fileRecords.create({
+        userId:userId,
+        fileLink:fileURL
+       },{transaction:transaction});
+       if(fileRecord){
+       transaction.commit(); 
        return res.status(200).json({fileURL, success:true});
+       }
+       else{
+        transaction.rollback();
+        return res.status(500).json({message: "error occured"});
+       }
     }
 
     catch(err){
+        await transaction.rollback();
         return res.status(500).json({message: err.message});
     }
+}
+
+exports.reportRecords = async (req,res,next)=>{
+ try{
+    const token = req.headers.authorization;
+    const decoded = jwt.verify(token,secret);
+    userId=decoded.userId;
+    const fr = await fileRecords.findAll({where:{userId:userId}, attributes:['fileLink']});
+    if(fr)
+    {
+        return res.status(200).json({fr});
+    }
+ } 
+ catch(err){
+    return res.status(500).json({message: err.message});
+}  
 }
