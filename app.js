@@ -19,8 +19,9 @@ const User = require('./backend/models/user');
 const Expense = require('./backend/models/expense');
 const Orders = require('./backend/models/orders');
 const totalExpense= require('./backend/models/totalExpense');
-const PCR = require('./backend/models/passwordChangeRequest');
+const fileRecords= require('./backend/models/fileRecord');
 const passwordChangeRequest = require('./backend/models/passwordChangeRequest');
+
 
 app.use('/user',userRoutes);
 
@@ -39,6 +40,9 @@ totalExpense.belongsTo(User);
 
 User.hasMany(passwordChangeRequest);
 passwordChangeRequest.belongsTo(User);
+
+User.hasMany(fileRecords);
+fileRecords.belongsTo(User);
 
 sequelize.sync()
 .then((results)=>{

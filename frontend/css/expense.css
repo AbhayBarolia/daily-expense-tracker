@@ -54,7 +54,7 @@ body {
     color: white;
 }
 
-form {
+.form {
     font-family: sans-serif;
      
         align-self: center;
@@ -142,8 +142,31 @@ form {
         border: 2px solid black;
        }
 
+       .recbtn {
+        position: absolute;
+        margin-top: 15px;
+        right: 0px;
+        color: white;
+        align-self: center;
+        align-items: center;
+        text-align: centre;
+        padding: 5px;
+        border-radius: 2px;
+        border: 2px solid white;
+        font-weight: bold;
+        font-family:sans-serif;
+        background-color: black;
+    }
+    .recbtn:hover {
+        text-decoration: underline;
+        background-color:white;
+        color: black;
+        border: 2px solid black;
+       }   
+
 
        .delbtn {
+        position:absolute;
         right: 200px;
         color: white;
         align-self: center;
@@ -163,3 +186,82 @@ form {
         color: black;
         border: 2px solid black;
        }
+
+       #fl{
+            color: white;
+       }
+
+       .navbtn {
+        right: 200px;
+        color: white;
+        align-self: center;
+        align-items: center;
+        text-align: centre;
+        padding: 5px;
+        border-radius: 5px;
+        border: 2px solid white;
+        margin-left: 5px;
+        font-weight: bold;
+        font-family:sans-serif;
+        background-color: black;
+    }
+    .navbtn:hover {
+        text-decoration: underline;
+        background-color:white;
+        color: black;
+        border: 2px solid black;
+       }
+
+       .currentnavbtn {
+        right: 200px;
+        color: black;
+        align-self: center;
+        align-items: center;
+        text-align: centre;
+        padding: 5px;
+        border-radius: 5px;
+        border: 2px solid white;
+        margin-left: 5px;
+        font-weight: bold;
+        font-family:sans-serif;
+        background-color:white;
+    }
+    .currentnavbtn:hover {
+        
+        background-color:white;
+        color: black;
+        border: 2px solid white;
+       }
+
+       .numbersubmit{
+        color: white;
+        align-self: center;
+        align-items: center;
+        text-align: centre;
+        padding: 2px;
+        border-radius: 1px;
+        border: 2px solid white;
+        font-weight: bold;
+        font-family:sans-serif;
+        background-color: black;
+    }
+    
+    .numbersubmit:hover {
+        text-decoration: underline;
+        background-color:white;
+        color: black;
+        border: 2px solid black;
+    }   
+
+    .form1 {
+            position: relative;
+            font-family: sans-serif;
+            float:right;
+            align-self: center;
+            border: 2px solid black;
+            text-align: center;
+            background-color: white;
+            font-size: x-small;
+            margin: 2px;
+            margin-right: 80px;
+        }
