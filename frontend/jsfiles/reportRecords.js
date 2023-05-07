@@ -1,7 +1,14 @@
 const list = document.getElementById('list');
 
 window.addEventListener("DOMContentLoaded", (event) => {  
-    getReportRecords();  
+    
+    if(localStorage.getItem("token")){
+        getReportRecords(); 
+        }
+        else
+        {
+            window.location.href = "/frontend/views/login.html";
+        }
     });
 
     async function getReportRecords(){
@@ -11,7 +18,6 @@ window.addEventListener("DOMContentLoaded", (event) => {
             
             for(let i =0; i<res.data.fr.length;i++)
             {   
-                console.log(res.data.fr[i]);
                 let str =res.data.fr[i].fileLink;
     
                 showData(str,i+1);

@@ -2,7 +2,7 @@ const express = require('express');
 
 const sib = require('sib-api-v3-sdk');
 
-const {v4 : uuidv4} = require('uuid')
+const {v4 : uuidv4} = require('uuid');
 
 require('dotenv').config();
 
@@ -14,7 +14,7 @@ const totalExpense= require('../models/totalExpense');
 
 const jwt= require('jsonwebtoken');
 
-const secret = "secret_key";
+const secret =process.env.SECRET_KEY;
 
 const bcrypt = require('bcrypt');
 const sequelize = require('../util/database');
@@ -48,10 +48,11 @@ exports.userSignup= async function (req,res,next){
                         userName: userName,
                         password: hash,
                         totalExpense:0
-                    },{transaction:transaction});
+                    });
 
                     if(created){
                         const user = await User.findOne({ where: { email:email } });
+                        console.log(user+" created");
                         const totalExpUpdate = await totalExpense.create({
                             userId: user.dataValues.id,
                             userName:user.dataValues.userName,
@@ -117,7 +118,7 @@ exports.userLogin = async function (req,res,next) {
         });
     }
         else{
-            res.status(201).json({ message: 'incorrect username' });
+            res.status(201).json({ message: 'incorrect email' });
         }
     }
     catch(err){
@@ -234,6 +235,7 @@ exports.newPasswordRequest= async function (req,res,next){
                 {   
                     await transaction.rollback();
                     res.status(500).json({ message: 'Something went wrong' });
+                    
                 }
                    
             }
@@ -244,7 +246,7 @@ exports.newPasswordRequest= async function (req,res,next){
         else
                 {   
                     await transaction.rollback();
-                    res.status(500).json({ message: 'Something went wrong' });
+                    res.status(201).json({ message: 'Email Id does not match' });
                 }
 }
     catch(err){ 

@@ -7,7 +7,9 @@ const User = require('../models/user');
 
 const jwt=require('jsonwebtoken');
 const sequelize = require('../util/database');
-const secret = "secret_key";
+
+require('dotenv').config();
+const secret = process.env.SECRET_KEY;
 
 let userId;
 let user;
@@ -18,8 +20,13 @@ exports.getUser= async function(req, res, next) {
         const token = req.headers.authorization;
         const decoded = jwt.verify(token,secret);
         userId=decoded.userId;
-        if(Orders.findOne({where: {userId: userId}})){
+        const userData=await Orders.findOne({where: {userId: userId, status:"SUCCESS"}});
+        
+        if(userData!=null&& userData!=undefined && userData.dataValues.status=="SUCCESS"){
             premium = true;
+        }
+        else{
+            premium = false;
         }
         user = await User.findOne({where:{id:userId}});
         res.status(200).json({userName:user.dataValues.userName, premium:premium });
@@ -33,8 +40,8 @@ exports.processPayment= async function(req, res, next) {
     try{
     const amount = 100;
     const rzp = new Razorpay({
-    key_id:  'rzp_test_YnjLsh1aGCKVlo',
-    key_secret: 'IKFVFuu0wcNcf0qAN9bL9RuE'
+    key_id: process.env.key_id,
+    key_secret: process.env.key_secret,
 });
 
 
@@ -43,17 +50,21 @@ exports.processPayment= async function(req, res, next) {
         return res.status(500).json({message: err});
     }
     else
-    {
-        const order =  await User.createOrder({orderId:orderTrans.id, status:'PENDING', paymentId:"WAITING"},{transaction: transaction});
-       if(order) {
+    {   
+        const token = req.headers.authorization;
+        const decoded = jwt.verify(token,secret);
+        userId=decoded.userId;
+        const order =  await Orders.create({orderId:orderTrans.id, status:'PENDING', paymentId:"WAITING", userId:userId},{transaction: transaction});
+        if(order) {
         await transaction.commit();
         return res.status(201).json({order, key_id:rzp.key_id});
-    }
+        }
     else{
         await transaction.rollback();
         return res.status(500).json({message: "Something went wrong"});
+        }
     }
-    }})
+})
 
 }
 catch(err){
@@ -66,9 +77,10 @@ catch(err){
 
 
 exports.successfulPayment= async (req,res,next) =>{
+    
 const updatedorder = await Orders.findOne({where:{orderId:req.body.order_id}})
 if(updatedorder){
-await updatedorder.set({staus:"SUCCESS",paymentId:req.body.payment_id});
+await updatedorder.set({status:"SUCCESS",paymentId:req.body.payment_id});
 await updatedorder.save();
 return res.status(201).json({payment:"SUCCESS"});
 }

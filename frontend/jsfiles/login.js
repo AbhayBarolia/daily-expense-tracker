@@ -1,8 +1,15 @@
+window.addEventListener("DOMContentLoaded", (event) => {  
+    localStorage.removeItem("tokens");
+    localStorage.removeItem("offSet");
+    });
+
+
 async function userDetails(e){
     e.preventDefault();
     let email = document.getElementById("email").value;
     let password = document.getElementById("password").value;
-  
+    
+    
     if(email == "" || password == ""){
         alert("All fields are required");
     }

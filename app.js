@@ -1,8 +1,16 @@
+const fs= require('fs');
+
 const express = require('express');
 
 const bodyParser= require('body-parser');
 
 const cors= require('cors');
+
+const helmet = require('helmet');
+
+const morgan = require('morgan');
+
+const compression = require('compression');
 
 const sequelize= require('./backend/util/database');
 
@@ -10,8 +18,13 @@ const userRoutes= require('./backend/routes/user');
 const expenseRoutes= require('./backend/routes/expense');
 const premiumRoutes= require('./backend/routes/premium');
 
+require('dotenv').config();
 
 const app= express();
+app.use(helmet());
+app.use(compression());
+const logStream= fs.createWriteStream('./logReport.log',{flags: 'a'});
+app.use(morgan('combined',{stream: logStream}));
 app.use(cors());
 app.use(bodyParser.json({ extended:false }));
 
@@ -46,6 +59,6 @@ fileRecords.belongsTo(User);
 
 sequelize.sync()
 .then((results)=>{
-    app.listen(3000);
+    app.listen(process.env.PORT || 3000);
 })
 .catch((err)=>{console.log(err);});

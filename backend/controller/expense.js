@@ -8,9 +8,13 @@ const Orders= require('../models/orders');
 const totalExpense= require('../models/totalExpense');
 const fileRecords = require('../models/fileRecord');
 
+require('dotenv').config();
+
 const jwt=require('jsonwebtoken');
 const sequelize = require('../util/database');
-const secret = "secret_key";
+const secret = process.env.SECRET_KEY;
+
+
 
 let userId;
 let premium;
@@ -22,10 +26,13 @@ try{
     const token = req.headers.authorization;
     const decoded = jwt.verify(token,secret);
     userId=decoded.userId;
-    let findUser= await Orders.findOne({where: {userId: userId}})
-    if(findUser!=null && findUser!=undefined){
-        premium = true;
-    }
+    const userData=await Orders.findOne({where: {userId: userId, status:"SUCCESS"}});
+        if(userData!=null&& userData!=undefined && userData.dataValues.status=="SUCCESS"){
+            premium = true;
+        }
+        else{
+            premium = false;
+        }
     const user = await User.findOne({where:{id:userId}});
     res.status(200).json({userName:user.dataValues.userName, premium:premium});
 }
@@ -156,7 +163,9 @@ exports.premiumTotalExpense = async (req, res, next)=>{
 }
 
 async function uploadToS3(data, filename){
-    
+    const BUCKET_NAME = process.env.BUCKET_NAME;
+    const IAM_USER_KEY= process.env.IAM_USER_KEY;
+    const IAM_USER_SECRET= process.env.IAM_USER_SECRET;
 
 
     let s3Bucket = await new AWS.S3({
@@ -178,7 +187,7 @@ async function uploadToS3(data, filename){
                  reject(err);
                 }        
                 else{
-                 console.log(s3response,"success");
+                 
                  resolve(s3response.Location);
                 }
              });

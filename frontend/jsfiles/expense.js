@@ -21,9 +21,16 @@ nav.addEventListener("click",switchPage);
 
 
 window.addEventListener("DOMContentLoaded", (event) => {  
-  premium=false;
-  getUser();  
-  getData(pageCount,offSet);   
+   
+  if(localStorage.getItem("token")){
+    premium=false;
+    getUser();  
+    getData(pageCount,offSet);   
+    }
+    else
+    {
+        window.location.href = "/frontend/views/login.html";
+    }
   });
 
 
@@ -103,8 +110,7 @@ async function getPremiumData(){
           }
         const config={headers:{'Content-Type':'application/JSON',Authorization:localStorage.getItem('token')}};
         const res = await axios.get("http://localhost:3000/expense/getexpense/"+page+"/"+offset,config);
-        console.log(res);
-        console.log("params:"+page+" "+offset);
+        
         for(let i =0; i< res.data.expense.length;i++)
         {   
             
@@ -190,7 +196,6 @@ catch(err){
 
 async function generateReport(){
     try{
-        console.log("Generating Report");
     const config={headers:{'Content-Type':'application/JSON',Authorization:localStorage.getItem('token')}};
     let reportGen= await axios.get("http://localhost:3000/expense/report",config);
     if(reportGen.status==200)
@@ -265,6 +270,7 @@ function showData(str,id)
         if(i==1)
         {
             for(let j=1;j<4;j++){
+                if(j<=totalPages){
                 let navbtn = document.createElement('navelem');
                 navbtn.setAttribute("type","button");
                 navbtn.setAttribute("id",j);
@@ -276,12 +282,13 @@ function showData(str,id)
                     navbtn.setAttribute("class","navbtn");
                 }
                 navbtn.appendChild(document.createTextNode(j));
-                nav.appendChild(navbtn);
+                nav.appendChild(navbtn);}
             }
         }
         else if(i>1&&i<totalPages)
         {   let start = i-1;
             let end= i+1;
+            if(j<=totalPages){
             for(let j=start;j<end+1; j++){
                 let navbtn = document.createElement('navelm');
                 navbtn.setAttribute("type","button");
@@ -294,11 +301,11 @@ function showData(str,id)
                     navbtn.setAttribute("class","navbtn");
                 }
                 navbtn.appendChild(document.createTextNode(j));
-                nav.appendChild(navbtn);
+                nav.appendChild(navbtn);}
             }
         }
         else 
-        {
+        {   
             for(let j=i-2;j<=i;j++){
                 let navbtn = document.createElement('navelem');
                 navbtn.setAttribute("type","button");
