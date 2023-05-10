@@ -22,7 +22,7 @@ const saltRounds=10;
 
 
 exports.getSignupRequest= async (req, res, next) => {
-    res.status(201).redirect('/frontend/views/signup.html');
+    res.status(201).redirect('/signup.html');
 }
 
 exports.userSignup= async function (req,res,next){
@@ -165,7 +165,7 @@ exports.resetPasswordRequest = async function (req,res,next){
         to:receivers,
         subject:'Reset Password',
         textContent:'Please click on the link below to reset your password',
-        htmlContent:`<a id=${email} href=http://localhost:3000/user/resetpassword/${uuid}>Reset Password</a>`
+        htmlContent:`<a id=${email} href=https://3.16.152.73:3000/resetpassword/${uuid}>Reset Password</a>`
     });
     if(emailSent){
         res.status(200).json({message:'Reset password mail sent, please click on the link in mail to reset your password'});
@@ -189,7 +189,7 @@ exports.getNewPasswordRequest= async function (req,res,next){
         const request = await pcr.findByPk(uuid);
         console.log(request);
         if(request && request.dataValues.isActive==true){
-            return res.status(200).redirect('http://127.0.0.1:5500//frontend/views/resetpassword.html');
+            return res.status(200).redirect('https://3.16.152.73:3000/resetpassword.html');
         }
         else{
             return res.status(500).json({message:'Request expired, please try again'});

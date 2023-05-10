@@ -1,4 +1,5 @@
 const fs= require('fs');
+const path= require('path');
 
 const express = require('express');
 
@@ -36,11 +37,17 @@ const fileRecords= require('./backend/models/fileRecord');
 const passwordChangeRequest = require('./backend/models/passwordChangeRequest');
 
 
+
 app.use('/user',userRoutes);
 
 app.use('/expense',expenseRoutes);
 
 app.use('/premium',premiumRoutes);
+
+app.use((req,res)=>{
+    const newPath=path.join(__dirname,`./frontend/${req.url}`);
+    res.sendFile(newPath);
+});
 
 Expense.belongsTo(User, {constraints:true, onDelete: 'cascade'});
 User.hasMany(Expense);
