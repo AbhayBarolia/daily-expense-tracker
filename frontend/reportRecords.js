@@ -14,7 +14,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
     async function getReportRecords(){
         try{
             const config={headers:{'Content-Type':'application/JSON',Authorization:localStorage.getItem('token')}};
-            const res = await axios.get("http://localhost:3000/expense/reportrecords",config);
+            const res = await axios.get("http://3.16.152.73:3000/expense/reportrecords",config);
             
             for(let i =0; i<res.data.fr.length;i++)
             {   
