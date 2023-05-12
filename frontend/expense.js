@@ -38,7 +38,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
 async function getUser() {
     try{
         const config={headers:{'Content-Type':'application/JSON',Authorization:localStorage.getItem('token')}};
-        const res = await axios.get("http://localhost:3000/expense/getuser",config);
+        const res = await axios.get("http://3.16.152.73:3000/expense/getuser",config);
         if(res!=undefined) {
         userName = res.data.userName;
         premium = res.data.premium;
@@ -84,7 +84,7 @@ async function getPremiumData(){
             getRecords.addEventListener("click",getReportRecords);
 
             const config={headers:{'Content-Type':'application/JSON',Authorization:localStorage.getItem('token')}};
-            let premiumListData= await axios.get("http://localhost:3000/expense/getpremiumlist",config);
+            let premiumListData= await axios.get("http://3.16.152.73:3000/expense/getpremiumlist",config);
             let premiumList = document.getElementById('premium-list');
             let listMessage= document.getElementById('premium-list-message');
             premiumList.removeChild(listMessage);
@@ -109,7 +109,7 @@ async function getPremiumData(){
             list.removeChild(list.firstChild);
           }
         const config={headers:{'Content-Type':'application/JSON',Authorization:localStorage.getItem('token')}};
-        const res = await axios.get("http://localhost:3000/expense/getexpense/"+page+"/"+offset,config);
+        const res = await axios.get("http://3.16.152.73:3000/expense/getexpense/"+page+"/"+offset,config);
         
         for(let i =0; i< res.data.expense.length;i++)
         {   
@@ -153,7 +153,7 @@ window.addEventListener("submit", (event)=>{
 
 async function sendData(obj){
     try{
-    const res = await axios.post("http://localhost:3000/expense/addexpense",obj); 
+    const res = await axios.post("http://3.16.152.73:3000/expense/addexpense",obj); 
     return;
 
     }
@@ -174,7 +174,7 @@ async function removeItem(e)
             let li=e.target.parentElement;
             let id = li.getAttribute("id");
         
-            let res= await axios.delete("http://localhost:3000/expense/delete/"+id);
+            let res= await axios.delete("http://3.16.152.73:3000/expense/delete/"+id);
             if(res.status==200){
                 
             list.removeChild(li);   
@@ -197,7 +197,7 @@ catch(err){
 async function generateReport(){
     try{
     const config={headers:{'Content-Type':'application/JSON',Authorization:localStorage.getItem('token')}};
-    let reportGen= await axios.get("http://localhost:3000/expense/report",config);
+    let reportGen= await axios.get("http://3.16.152.73:3000/expense/report",config);
     if(reportGen.status==200)
     {
      alert("Report is downloading"); 
