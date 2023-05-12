@@ -24,7 +24,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
 
 async function loginUser(user){
-    const res= await axios.post("http://3.16.152.73:3000/user/login",user);   
+    const res= await axios.post("http://18.119.162.42 :3000/user/login",user);   
     alert(res.data.message);    
     if(res.status==200){
         localStorage.setItem("token",res.data.token);

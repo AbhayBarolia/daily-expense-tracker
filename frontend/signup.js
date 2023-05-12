@@ -28,7 +28,7 @@ window.addEventListener("submit", (e)=>{
 
 async function createUser(user){
     console.log('reached');
-    const res= await axios.post("http://3.16.152.73:3000/user/signup",user);   
+    const res= await axios.post("http://18.119.162.42 :3000/user/signup",user);   
     alert(res.data.message);
     window.location.replace("/login.html");
 }
