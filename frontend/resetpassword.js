@@ -28,7 +28,7 @@ async function resetPassword(e){
 
 
 async function newPassword(user){
-    const res= await axios.post("http://3.16.152.73:3000/user/newpassword",user);   
+    const res= await axios.post("http://localhost:3000/user/newpassword",user);   
     alert(res.data.message);    
     if(res.status==200){   
     window.location.href = "/login.html";}

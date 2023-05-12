@@ -7,9 +7,6 @@ const bodyParser= require('body-parser');
 
 const cors= require('cors');
 
-const helmet = require('helmet');
-
-const morgan = require('morgan');
 
 const compression = require('compression');
 
@@ -22,10 +19,6 @@ const premiumRoutes= require('./backend/routes/premium');
 require('dotenv').config();
 
 const app= express();
-app.use(helmet());
-app.use(compression());
-const logStream= fs.createWriteStream('./logReport.log',{flags: 'a'});
-app.use(morgan('combined',{stream: logStream}));
 app.use(cors());
 app.use(bodyParser.json({ extended:false }));
 
