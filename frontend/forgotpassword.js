@@ -15,7 +15,7 @@ async function forgotPassword(e){
 
 
 async function resetPassword(user){
-    const res= await axios.post("http://18.119.162.42 :3000/user/resetpassword",user);   
+    const res= await axios.post("http://18.119.162.42:3000/user/resetpassword",user);   
     alert(res.data.message);    
     if(res.status==200){   
     window.location.href = "/login.html";}

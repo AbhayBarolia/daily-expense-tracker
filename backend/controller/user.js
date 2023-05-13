@@ -166,7 +166,7 @@ exports.resetPasswordRequest = async function (req,res,next){
         to:receivers,
         subject:'Reset Password',
         textContent:'Please click on the link below to reset your password',
-        htmlContent:`<a id=${email} href=https://3.16.152.73:3000/resetpassword/${uuid}>Reset Password</a>`
+        htmlContent:`<a id=${email} href=http://18.119.162.42/:3000/user/resetpassword/${uuid}>Reset Password</a>`
     });
     if(emailSent){
         res.status(200).json({message:'Reset password mail sent, please click on the link in mail to reset your password'});

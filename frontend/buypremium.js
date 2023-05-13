@@ -16,7 +16,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
 async function getUser() {
     try{
         const config={headers:{'Content-Type':'application/JSON',Authorization:localStorage.getItem('token')}};
-        const res = await axios.get("http://18.119.162.42 :3000/premium/getuser",config);
+        const res = await axios.get("http://18.119.162.42:3000/premium/getuser",config);
         if(res!=undefined) {
         userName = res.data.userName;
         premium = res.data.premium;
@@ -40,14 +40,14 @@ async function getUser() {
 async function commitPayment(e) {
  try{
     const config={headers:{'Content-Type':'application/JSON',Authorization:localStorage.getItem('token')}};
-    const res = await axios.get("http://18.119.162.42 :3000/premium/payment", config);
+    const res = await axios.get("http://18.119.162.42:3000/premium/payment", config);
 
     if(res!=undefined) {
         var options = {
             "key": res.data.key_id,
             "order_id":res.data.order.orderId,
             "handler": async function (response) {
-                await axios.post("http://18.119.162.42 :3000/premium/updatepaymentstatus",{
+                await axios.post("http://18.119.162.42:3000/premium/updatepaymentstatus",{
                     order_id:options.order_id,
                     payment_id:response.razorpay_payment_id},
                     config);
