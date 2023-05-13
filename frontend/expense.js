@@ -169,7 +169,7 @@ async function removeItem(e)
     { try{
         if(e.target.classList.contains("delbtn"))
     {
-        if(confirm("Do you want to delete this expense"))
+        if(confirm("Do you want to delete this expense!"))
         {
             let li=e.target.parentElement;
             let id = li.getAttribute("id");
